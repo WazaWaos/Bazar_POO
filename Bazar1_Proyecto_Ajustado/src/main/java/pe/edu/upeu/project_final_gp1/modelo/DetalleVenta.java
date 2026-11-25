@@ -8,20 +8,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class DetalleVenta {
-    private final StringProperty idProducto = new SimpleStringProperty("");
+    private final IntegerProperty idProducto = new SimpleIntegerProperty();
     private final StringProperty nombreProducto = new SimpleStringProperty("");
     private final IntegerProperty cantidad = new SimpleIntegerProperty();
     private final DoubleProperty precioUnitario = new SimpleDoubleProperty();
     private final DoubleProperty subtotal = new SimpleDoubleProperty();
 
     public DetalleVenta() {}
-    public DetalleVenta(String idProducto, String nombreProducto, int cantidad, double precioUnitario) {
+    public DetalleVenta(int idProducto, String nombreProducto, int cantidad, double precioUnitario) {
         setIdProducto(idProducto); setNombreProducto(nombreProducto); setCantidad(cantidad); setPrecioUnitario(precioUnitario);
         setSubtotal(cantidad * precioUnitario);
     }
-    public String getIdProducto() { return idProducto.get(); }
-    public void setIdProducto(String value) { idProducto.set(value == null ? "" : value); }
-    public StringProperty idProductoProperty() { return idProducto; }
+    public int getIdProducto() { return idProducto.get(); }
+    public void setIdProducto(int value) { idProducto.set(value); }
+    public IntegerProperty idProductoProperty() { return idProducto; }
     public String getNombreProducto() { return nombreProducto.get(); }
     public void setNombreProducto(String value) { nombreProducto.set(value == null ? "" : value); }
     public StringProperty nombreProductoProperty() { return nombreProducto; }

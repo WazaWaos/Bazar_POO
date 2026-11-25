@@ -11,16 +11,17 @@ public class TestDeudor {
     static IDeudorDao dao = new DeudorDaoImpl();
 
     public void insertar() throws SQLException {
-        Deudor d = new Deudor(0, "Deudor de prueba", "99999997", "900000002", 40.00);
+        Deudor d = new Deudor(0, "Deudor de prueba", 99999997, 40.00);
         dao.registrar(d);
         System.out.println("Deudor registrado");
     }
 
     public void listar() throws SQLException {
         List<Deudor> lista = dao.listAll();
+
         if (lista != null && !lista.isEmpty()) {
             for (Deudor d : lista) {
-                System.out.println("ID: " + d.getIdDeudor());
+                System.out.println("ID CLIENTE: " + d.getIdCliente());
                 System.out.println("NOMBRE: " + d.getNombre());
                 System.out.println("DNI: " + d.getDni());
                 System.out.println("DEUDA: " + d.getDeuda());
@@ -32,8 +33,9 @@ public class TestDeudor {
 
     public void registrarPago() throws SQLException {
         List<Deudor> lista = dao.buscar("99999997");
+
         if (!lista.isEmpty()) {
-            dao.registrarPago(lista.get(0).getIdDeudor(), 10.00);
+            dao.registrarPago(lista.get(0).getIdCliente(), 10.00);
             System.out.println("Pago registrado");
         } else {
             System.out.println("Primero registra el deudor de prueba");
@@ -42,8 +44,8 @@ public class TestDeudor {
 
     public static void main(String[] args) throws SQLException {
         TestDeudor t = new TestDeudor();
-        t.listar();
-        // t.insertar();
-        // t.registrarPago();
+        //t.listar();
+        //t.insertar();
+        t.registrarPago();
     }
 }

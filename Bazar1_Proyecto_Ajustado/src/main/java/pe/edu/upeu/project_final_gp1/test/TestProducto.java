@@ -9,26 +9,28 @@ import java.util.List;
 
 public class TestProducto {
     static IProductoDao dao = new ProductoDaoImpl();
+    static int idProducto;
 
     public void insertar() throws SQLException {
-        Producto p = new Producto("TEST-P01", "Producto de prueba", 12.50, 20);
+        Producto p = new Producto("Producto de prueba", 12.50, 20);
         boolean result = dao.insert(p);
-        System.out.println(result ? "Insert success" : "Insert error");
+        idProducto = p.getId();
+        System.out.println(result ? "Insert success. ID: " + idProducto : "Insert error");
     }
 
     public void actualizar() throws SQLException {
-        Producto p = new Producto("TEST-P01", "Producto actualizado", 15.00, 18);
+        Producto p = new Producto(idProducto, "Producto actualizado", 15.00, 18);
         boolean result = dao.update(p);
         System.out.println(result ? "Update success" : "Update error");
     }
 
     public void eliminar() throws SQLException {
-        boolean result = dao.delete("TEST-P01");
+        boolean result = dao.delete(idProducto);
         System.out.println(result ? "Delete success" : "Delete error");
     }
 
     public void buscar() throws SQLException {
-        Producto p = dao.searchById("TEST-P01");
+        Producto p = dao.searchById(idProducto);
         if (p != null) {
             System.out.println("ID: " + p.getId());
             System.out.println("NOMBRE: " + p.getNombre());
@@ -56,9 +58,6 @@ public class TestProducto {
     public static void main(String[] args) throws SQLException {
         TestProducto t = new TestProducto();
         t.listar();
-        // t.insertar();
-        // t.buscar();
-        // t.actualizar();
-        // t.eliminar();
+        t.eliminar();
     }
 }
