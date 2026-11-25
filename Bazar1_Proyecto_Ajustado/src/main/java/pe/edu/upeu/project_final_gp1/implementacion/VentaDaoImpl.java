@@ -15,10 +15,13 @@ public class VentaDaoImpl implements IVentaDao {
     @Override public Venta registrarVenta(Venta venta) throws SQLException {
         if (venta == null || venta.getDetalles().isEmpty()) throw new IllegalArgumentException("Agrega al menos un producto a la venta.");
         if (venta.getNombreCliente().trim().isEmpty() || venta.getDniCliente().trim().isEmpty()) throw new IllegalArgumentException("El nombre y el DNI del cliente son obligatorios.");
+        int dniEntero = parsearDni(venta.getDniCliente());
+        int telefonoEntero = parsearTelefono(venta.getTelefonoCliente());
 
         if (!Double.isFinite(venta.getMontoPagado())) throw new IllegalArgumentException("El pago inicial debe ser un importe válido.");
         double total = 0;
         for (DetalleVenta d : venta.getDetalles()) {
+            if (d == null) throw new IllegalArgumentException("Hay un detalle de venta nulo.");
             if (d.getCantidad() <= 0 || !Double.isFinite(d.getPrecioUnitario()) || d.getPrecioUnitario() < 0) throw new IllegalArgumentException("La cantidad y el precio deben ser válidos.");
             total += d.getCantidad() * d.getPrecioUnitario();
         }
@@ -36,7 +39,7 @@ public class VentaDaoImpl implements IVentaDao {
             try {
                 // Mantiene un directorio único de clientes reutilizable en ventas futuras.
                 new ClienteDaoImpl().guardarOActualizar(cn,
-                        new Cliente(venta.getNombreCliente(), venta.getDniCliente(), venta.getTelefonoCliente()));
+                        new Cliente(venta.getNombreCliente(), dniEntero, telefonoEntero));
 
                 String sqlVenta = "INSERT INTO venta(fecha,cliente_nombre,cliente_dni,cliente_telefono,total,monto_pagado,saldo_pendiente,tipo_pago) VALUES(?,?,?,?,?,?,?,?)";
                 try (PreparedStatement st = cn.prepareStatement(sqlVenta)) {
@@ -96,6 +99,28 @@ public class VentaDaoImpl implements IVentaDao {
             }
         }
         return result;
+    }
+
+    private static int parsearDni(String dni) {
+        if (dni == null || dni.isBlank()) throw new IllegalArgumentException("El nombre y el DNI del cliente son obligatorios.");
+        try {
+            int valor = Integer.parseInt(dni.trim());
+            if (valor <= 0) throw new IllegalArgumentException("El DNI del cliente debe ser un número mayor a cero.");
+            return valor;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("El DNI del cliente debe ser numérico.");
+        }
+    }
+
+    private static int parsearTelefono(String telefono) {
+        if (telefono == null || telefono.isBlank()) return 0;
+        try {
+            int valor = Integer.parseInt(telefono.trim());
+            if (valor < 0) throw new IllegalArgumentException("El teléfono del cliente no puede ser negativo.");
+            return valor;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("El teléfono del cliente debe ser numérico.");
+        }
     }
 
     private static double redondear(double value) { return Math.round(value * 100.0) / 100.0; }

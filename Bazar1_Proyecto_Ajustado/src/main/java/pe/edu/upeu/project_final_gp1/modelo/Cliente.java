@@ -1,21 +1,21 @@
 package pe.edu.upeu.project_final_gp1.modelo;
 
 public class Cliente {
-    private final String dni;
+    private final int dni;
     private final String nombre;
-    private final String telefono;
+    private final int telefono;
 
-    public Cliente(String nombre, String dni, String telefono) {
+    public Cliente(String nombre, int dni, int telefono) {
         this.nombre = nombre == null ? "" : nombre.trim();
-        this.dni = dni == null ? "" : dni.trim();
-        this.telefono = telefono == null ? "" : telefono.trim();
+        this.dni = dni;
+        this.telefono = telefono;
     }
 
     public String getNombre() { return nombre; }
-    public String getDni() { return dni; }
-    public String getTelefono() { return telefono; }
+    public int getDni() { return dni; }
+    public int getTelefono() { return telefono; }
 
     @Override public String toString() {
-        return nombre + (dni.isBlank() ? "" : " · " + dni);
+        return nombre + (dni > 0 ? " · " + dni : "");
     }
 }

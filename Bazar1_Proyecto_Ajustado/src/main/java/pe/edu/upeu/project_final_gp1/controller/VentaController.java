@@ -99,7 +99,7 @@ public class VentaController {
 
     @FXML private void handleGuardarCliente() {
         String nombre = txtCliente.getText() == null ? "" : txtCliente.getText().trim();
-        String dni = txtDniCliente.getText() == null ? "" : txtDniCliente.getText().trim();
+        int dni = txtDniCliente.getLength() == 0 ? "" : txtDniCliente.;
         String telefono = txtTelefonoCliente.getText() == null ? "" : txtTelefonoCliente.getText().trim();
         if (nombre.isBlank() || dni.isBlank()) {
             aviso("Para guardar la ficha, completa al menos el nombre y el DNI o identificador del cliente.", Alert.AlertType.WARNING);

@@ -18,7 +18,7 @@ public class ClienteDaoImpl {
 
         String sql = "SELECT nombre,dni,telefono FROM cliente " +
                 "WHERE nombre LIKE ? COLLATE NOCASE OR nombre LIKE ? COLLATE NOCASE " +
-                "OR dni LIKE ? COLLATE NOCASE OR telefono LIKE ? COLLATE NOCASE " +
+                "OR CAST(dni AS TEXT) LIKE ? OR CAST(telefono AS TEXT) LIKE ? " +
                 "ORDER BY nombre COLLATE NOCASE LIMIT 10";
         try (Connection cn = ConexionBD.getConnection(); PreparedStatement st = cn.prepareStatement(sql)) {
             st.setString(1, filtro + "%");
@@ -26,7 +26,13 @@ public class ClienteDaoImpl {
             st.setString(3, filtro + "%");
             st.setString(4, filtro + "%");
             try (ResultSet rs = st.executeQuery()) {
-                while (rs.next()) clientes.add(new Cliente(rs.getString("nombre"), rs.getString("dni"), rs.getString("telefono")));
+                while (rs.next()) {
+                    clientes.add(new Cliente(
+                            rs.getString("nombre"),
+                            rs.getInt("dni"),
+                            rs.getInt("telefono")
+                    ));
+                }
             }
         }
         return clientes;
@@ -43,12 +49,12 @@ public class ClienteDaoImpl {
         validar(cliente);
         String sql = "INSERT INTO cliente(dni,nombre,telefono) VALUES(?,?,?) " +
                 "ON CONFLICT(dni) DO UPDATE SET nombre=excluded.nombre, " +
-                "telefono=CASE WHEN trim(excluded.telefono)='' THEN cliente.telefono ELSE excluded.telefono END, " +
+                "telefono=CASE WHEN excluded.telefono <= 0 THEN cliente.telefono ELSE excluded.telefono END, " +
                 "fecha_actualizacion=CURRENT_TIMESTAMP";
         try (PreparedStatement st = cn.prepareStatement(sql)) {
-            st.setString(1, cliente.getDni());
+            st.setInt(1, cliente.getDni());
             st.setString(2, cliente.getNombre());
-            st.setString(3, cliente.getTelefono());
+            st.setInt(3, cliente.getTelefono());
             st.executeUpdate();
         }
     }
@@ -56,6 +62,7 @@ public class ClienteDaoImpl {
     private void validar(Cliente cliente) {
         if (cliente == null) throw new IllegalArgumentException("La ficha del cliente es obligatoria.");
         if (cliente.getNombre().isBlank()) throw new IllegalArgumentException("Ingresa el nombre del cliente.");
-        if (cliente.getDni().isBlank()) throw new IllegalArgumentException("Ingresa el DNI o identificador del cliente.");
+        if (cliente.getDni() <= 0) throw new IllegalArgumentException("Ingresa un DNI o identificador válido del cliente.");
+        if (cliente.getTelefono() < 0) throw new IllegalArgumentException("El teléfono del cliente no puede ser negativo.");
     }
 }
