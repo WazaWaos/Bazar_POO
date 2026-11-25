@@ -1,7 +1,6 @@
 package pe.edu.upeu.project_final_gp1.implementacion;
 
 import pe.edu.upeu.project_final_gp1.interfaces.IDeudorDao;
-import pe.edu.upeu.project_final_gp1.modelo.Cliente;
 import pe.edu.upeu.project_final_gp1.modelo.Deudor;
 import pe.edu.upeu.project_final_gp1.modelo.MovimientoDeuda;
 import pe.edu.upeu.project_final_gp1.utils.ConexionBD;
@@ -27,7 +26,7 @@ public class DeudorDaoImpl implements IDeudorDao {
         try (Connection cn = abrir()) {
             cn.setAutoCommit(false);
             try {
-                String dni = d.getDni().trim();
+                String dni = String.valueOf(d.getDni());
                 Integer existente = null; double deudaActual = 0;
                 try (PreparedStatement q = cn.prepareStatement("SELECT iddeudor,deuda FROM deudor WHERE dni=? COLLATE NOCASE")) {
                     q.setString(1, dni);
@@ -48,7 +47,6 @@ public class DeudorDaoImpl implements IDeudorDao {
                     }
                 }
                 insertarIngreso(cn, dni, d.getDeuda(), detalle == null || detalle.isBlank() ? "Deuda inicial" : detalle);
-                new ClienteDaoImpl().guardarOActualizar(cn, new Cliente(d.getNombre(), d.getDni(), d.getTelefono()));
                 cn.commit();
             } catch (Exception e) { revertir(cn, e, "No se pudo guardar el deudor."); }
             finally { try { cn.setAutoCommit(true); } catch (SQLException ignored) {} }
@@ -73,7 +71,6 @@ public class DeudorDaoImpl implements IDeudorDao {
                     st.setString(1, d.getNombre().trim()); st.setString(2, d.getTelefono().trim()); st.setInt(3, d.getIdDeudor());
                     st.executeUpdate();
                 }
-                new ClienteDaoImpl().guardarOActualizar(cn, new Cliente(d.getNombre(), dni, d.getTelefono()));
                 cn.commit();
             } catch (Exception e) { revertir(cn, e, "No se pudo actualizar el deudor."); }
             finally { try { cn.setAutoCommit(true); } catch (SQLException ignored) {} }
@@ -181,7 +178,7 @@ public class DeudorDaoImpl implements IDeudorDao {
         try (Connection cn = abrir(); PreparedStatement st = cn.prepareStatement(sql)) {
             st.setString(1, "%" + texto + "%"); st.setString(2, "%" + texto + "%");
             try (ResultSet rs = st.executeQuery()) {
-                while (rs.next()) result.add(new Deudor(rs.getInt("iddeudor"), rs.getString("nombre"), rs.getString("dni"), rs.getString("telefono"), rs.getDouble("deuda")));
+                while (rs.next()) result.add(new Deudor(rs.getInt("iddeudor"), rs.getString("nombre"), rs.getInt("dni"), rs.getString("telefono"), rs.getDouble("deuda")));
             }
         }
         return result;
@@ -245,7 +242,7 @@ public class DeudorDaoImpl implements IDeudorDao {
 
     private void validar(Deudor d) {
         if (d == null || d.getNombre().isBlank()) throw new IllegalArgumentException("El nombre del deudor es obligatorio.");
-        if (d.getDni().isBlank()) throw new IllegalArgumentException("El DNI del deudor es obligatorio.");
+        if (d.getDni() <= 0) throw new IllegalArgumentException("El DNI del deudor debe ser un número entero positivo.");
         if (d.getDeuda() < 0 || !Double.isFinite(d.getDeuda())) throw new IllegalArgumentException("La deuda no puede ser negativa.");
     }
 }

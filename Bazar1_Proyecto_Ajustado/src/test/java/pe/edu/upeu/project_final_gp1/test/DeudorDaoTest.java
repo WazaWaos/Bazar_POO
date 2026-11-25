@@ -11,22 +11,35 @@ class DeudorDaoTest extends BaseDaoTest {
 
     @Test
     void registrarAumentarYRecibirPago() throws Exception {
-        dao.registrar(new Deudor(0, "Carlos Ruiz", "D001", "900111222", 50.00));
-        Deudor d = dao.buscar("D001").get(0);
-        assertEquals(50.00, d.getDeuda(), 0.001);
 
-        dao.aumentarDeuda(d.getIdDeudor(), 10.00);
-        assertEquals(60.00, dao.buscar("D001").get(0).getDeuda(), 0.001);
+        Deudor nuevo = new Deudor(0, "Carlos Ruiz", 99999997, 50.00);
+        dao.registrar(nuevo);
 
-        dao.registrarPago(d.getIdDeudor(), 20.00);
-        assertEquals(40.00, dao.buscar("D001").get(0).getDeuda(), 0.001);
+        Deudor deudor = dao.buscar("99999997").get(0);
+
+        assertEquals(50.00, deudor.getDeuda(), 0.001);
+        assertEquals(nuevo.getIdCliente(), deudor.getIdCliente());
+        assertEquals(99999997, deudor.getDni());
+
+        dao.aumentarDeuda(deudor.getIdCliente(), 10.00);
+
+        assertEquals(60.00, dao.buscar("99999997").get(0).getDeuda(), 0.001);
+
+        dao.registrarPago(deudor.getIdCliente(), 20.00);
+
+        assertEquals(40.00, dao.buscar("99999997").get(0).getDeuda(), 0.001);
     }
 
     @Test
     void rechazarPagoMayorALaDeuda() throws Exception {
-        dao.registrar(new Deudor(0, "Carlos Ruiz", "D001", "900111222", 20.00));
-        int id = dao.buscar("D001").get(0).getIdDeudor();
-        assertThrows(IllegalArgumentException.class, () -> dao.registrarPago(id, 30.00));
-        assertEquals(20.00, dao.buscar("D001").get(0).getDeuda(), 0.001);
+
+        dao.registrar(new Deudor(0, "Carlos Ruiz", 99999997, 20.00));
+
+        int idCliente = dao.buscar("99999997").get(0).getIdCliente();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> dao.registrarPago(idCliente, 30.00));
+
+        assertEquals(20.00, dao.buscar("99999997").get(0).getDeuda(), 0.001);
     }
 }

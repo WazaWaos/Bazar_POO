@@ -8,6 +8,7 @@ module pe.edu.upeu.project_final_gp1 {
     requires java.sql;
     requires org.xerial.sqlitejdbc;
     requires javafx.graphics;
+    requires javafx.base;
 
     opens pe.edu.upeu.project_final_gp1 to javafx.fxml;
     opens pe.edu.upeu.project_final_gp1.modelo to java.base, javafx.base, javafx.fxml;

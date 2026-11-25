@@ -10,18 +10,19 @@ public class TestCliente {
     static ClienteDaoImpl dao = new ClienteDaoImpl();
 
     public void guardar() throws SQLException {
-        Cliente c = new Cliente("Cliente de prueba", "99999998", "900000001");
+        Cliente c = new Cliente("Cliente de prueba", 99999998);
         dao.guardarOActualizar(c);
         System.out.println("Cliente guardado");
     }
 
     public void buscar() throws SQLException {
         List<Cliente> lista = dao.buscar("99999998");
+
         if (!lista.isEmpty()) {
             for (Cliente c : lista) {
+                System.out.println("ID: " + c.getIdCliente());
                 System.out.println("NOMBRE: " + c.getNombre());
                 System.out.println("DNI: " + c.getDni());
-                System.out.println("TELEFONO: " + c.getTelefono());
             }
         } else {
             System.out.println("No hay registros");
@@ -31,6 +32,5 @@ public class TestCliente {
     public static void main(String[] args) throws SQLException {
         TestCliente t = new TestCliente();
         t.buscar();
-        // t.guardar();
     }
 }

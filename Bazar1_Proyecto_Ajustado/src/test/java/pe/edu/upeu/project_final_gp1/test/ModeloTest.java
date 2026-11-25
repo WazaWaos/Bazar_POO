@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ModeloTest {
     @Test
     void detalleActualizaElSubtotalAlCambiarCantidad() {
-        DetalleVenta detalle = new DetalleVenta("P001", "Arroz", 2, 4.50);
+        DetalleVenta detalle = new DetalleVenta(1, "Arroz", 2, 4.50);
         assertEquals(9.00, detalle.getSubtotal(), 0.001);
 
         detalle.setCantidad(3);
@@ -21,10 +21,11 @@ class ModeloTest {
 
     @Test
     void productoAceptaDatosDeInventario() {
-        Producto p = new Producto("P002", "Azucar", 4.25, 12);
-        assertEquals("P002", p.getId());
-        assertEquals("Azucar", p.getNombre());
-        assertEquals(4.25, p.getPrecio(), 0.001);
-        assertEquals(12, p.getStock());
+        Producto producto = new Producto(2, "Azucar", 4.25, 12);
+
+        assertEquals(2, producto.getId());
+        assertEquals("Azucar", producto.getNombre());
+        assertEquals(4.25, producto.getPrecio(), 0.001);
+        assertEquals(12, producto.getStock());
     }
 }

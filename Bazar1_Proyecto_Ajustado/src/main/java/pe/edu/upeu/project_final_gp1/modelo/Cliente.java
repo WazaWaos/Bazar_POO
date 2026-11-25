@@ -1,21 +1,49 @@
 package pe.edu.upeu.project_final_gp1.modelo;
 
 public class Cliente {
-    private final int dni;
-    private final String nombre;
-    private final int telefono;
+    private int idCliente;
+    private String nombre;
+    private int dni;
 
-    public Cliente(String nombre, int dni, int telefono) {
-        this.nombre = nombre == null ? "" : nombre.trim();
-        this.dni = dni;
-        this.telefono = telefono;
+    public Cliente() {
     }
 
-    public String getNombre() { return nombre; }
-    public int getDni() { return dni; }
-    public int getTelefono() { return telefono; }
+    public Cliente(int idCliente, String nombre, int dni) {
+        this.idCliente = idCliente;
+        this.nombre = nombre == null ? "" : nombre.trim();
+        this.dni = dni;
+    }
 
-    @Override public String toString() {
-        return nombre + (dni > 0 ? " · " + dni : "");
+    public Cliente(String nombre, int dni) {
+        this(0, nombre, dni);
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int value) {
+        idCliente = value;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String value) {
+        nombre = value == null ? "" : value.trim();
+    }
+
+    public int getDni() {
+        return dni;
+    }
+
+    public void setDni(int value) {
+        dni = value;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + (dni == 0 ? "" : " · " + dni);
     }
 }

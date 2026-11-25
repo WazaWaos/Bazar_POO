@@ -13,29 +13,28 @@ class ProductoDaoTest extends BaseDaoTest {
 
     @Test
     void insertarBuscarActualizarYEliminar() throws Exception {
-        Producto p = new Producto("P001", "Arroz", 4.50, 20);
-        assertTrue(dao.insert(p));
+        Producto producto = new Producto("Arroz", 4.50, 20);
+        assertTrue(dao.insert(producto));
+        assertTrue(producto.getId() > 0);
 
-        Producto encontrado = dao.searchById("p001");
+        Producto encontrado = dao.searchById(producto.getId());
         assertNotNull(encontrado);
         assertEquals("Arroz", encontrado.getNombre());
         assertEquals(20, encontrado.getStock());
 
-        p.setNombre("Arroz extra");
-        p.setPrecio(5.00);
-        p.setStock(18);
-        assertTrue(dao.update(p));
-        assertEquals("Arroz extra", dao.searchById("P001").getNombre());
+        producto.setNombre("Arroz extra");
+        producto.setPrecio(5.00);
+        producto.setStock(18);
+        assertTrue(dao.update(producto));
+        assertEquals("Arroz extra", dao.searchById(producto.getId()).getNombre());
         assertEquals(1, dao.searchByNombre("extra").size());
 
-        assertTrue(dao.delete("P001"));
-        assertNull(dao.searchById("P001"));
+        assertTrue(dao.delete(producto.getId()));
+        assertNull(dao.searchById(producto.getId()));
     }
 
     @Test
-    void noPermitirCodigoDuplicado() throws Exception {
-        dao.insert(new Producto("P001", "Arroz", 4.50, 20));
-        assertThrows(SQLException.class,
-                () -> dao.insert(new Producto("P001", "Azucar", 5.00, 10)));
+    void noEliminarProductoInexistente() throws Exception {
+        assertFalse(dao.delete(999999));
     }
 }

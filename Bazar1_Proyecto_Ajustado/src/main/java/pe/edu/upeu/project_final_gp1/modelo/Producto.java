@@ -8,18 +8,21 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Producto {
-    private final StringProperty id = new SimpleStringProperty("");
+    private final IntegerProperty id = new SimpleIntegerProperty();
     private final StringProperty nombre = new SimpleStringProperty("");
     private final DoubleProperty precio = new SimpleDoubleProperty();
     private final IntegerProperty stock = new SimpleIntegerProperty();
 
     public Producto() {}
-    public Producto(String id, String nombre, double precio, int stock) {
+    public Producto(int id, String nombre, double precio, int stock) {
         setId(id); setNombre(nombre); setPrecio(precio); setStock(stock);
     }
-    public String getId() { return id.get(); }
-    public void setId(String value) { id.set(value == null ? "" : value); }
-    public StringProperty idProperty() { return id; }
+    public Producto(String nombre, double precio, int stock) {
+        this(0, nombre, precio, stock);
+    }
+    public int getId() { return id.get(); }
+    public void setId(int value) { id.set(value); }
+    public IntegerProperty idProperty() { return id; }
     public String getNombre() { return nombre.get(); }
     public void setNombre(String value) { nombre.set(value == null ? "" : value); }
     public StringProperty nombreProperty() { return nombre; }

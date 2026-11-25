@@ -2,6 +2,7 @@ package pe.edu.upeu.project_final_gp1.controller;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -23,7 +24,8 @@ public class DeudorController {
 
     @FXML private TextField txtNombre, txtDni, txtTelefono, txtDeuda, txtDetalle, txtMontoOperacion, txtBuscar;
     @FXML private TableView<Deudor> tableDeudores;
-    @FXML private TableColumn<Deudor, String> colNombre, colDni, colTelefono, colEstado;
+    @FXML private TableColumn<Deudor, String> colNombre, colTelefono, colEstado;
+    @FXML private TableColumn<Deudor, Number> colDni;
     @FXML private TableColumn<Deudor, Number> colDeuda;
     @FXML private VBox boxDetalle;
     @FXML private Label lblTituloDetalle, lblTotalDeuda, lblEstadoDetalle;
@@ -34,7 +36,7 @@ public class DeudorController {
 
     @FXML public void initialize() {
         colNombre.setCellValueFactory(c -> c.getValue().nombreProperty());
-        colDni.setCellValueFactory(c -> c.getValue().dniProperty());
+        colDni.setCellValueFactory(c -> new ReadOnlyIntegerWrapper(c.getValue().getDni()));
         colTelefono.setCellValueFactory(c -> c.getValue().telefonoProperty());
         colDeuda.setCellValueFactory(c -> c.getValue().deudaProperty());
         colDeuda.setCellFactory(CurrencyCellFactory.create());
@@ -51,7 +53,7 @@ public class DeudorController {
 
         tableDeudores.getSelectionModel().selectedItemProperty().addListener((obs, old, d) -> {
             if (d != null) {
-                txtNombre.setText(d.getNombre()); txtDni.setText(d.getDni()); txtTelefono.setText(d.getTelefono()); txtDeuda.setText(String.format(Locale.US, "%.2f", d.getDeuda()));
+                txtNombre.setText(d.getNombre()); txtDni.setText(String.valueOf(d.getDni())); txtTelefono.setText(d.getTelefono()); txtDeuda.setText(String.format(Locale.US, "%.2f", d.getDeuda()));
                 txtDni.setDisable(true); txtDeuda.setDisable(true);
                 mostrarDetalle(d);
             } else if (old != null) {
@@ -66,10 +68,13 @@ public class DeudorController {
         Deudor seleccionado = tableDeudores.getSelectionModel().getSelectedItem();
         try {
             String nombre = txtNombre.getText() == null ? "" : txtNombre.getText().trim();
-            String dni = txtDni.getText() == null ? "" : txtDni.getText().trim();
+            String dniTexto = txtDni.getText() == null ? "" : txtDni.getText().trim();
             String telefono = txtTelefono.getText() == null ? "" : txtTelefono.getText().trim();
             if (nombre.isBlank()) throw new IllegalArgumentException("El nombre del deudor es obligatorio.");
-            if (dni.isBlank()) throw new IllegalArgumentException("El DNI del deudor es obligatorio.");
+            if (dniTexto.isBlank()) throw new IllegalArgumentException("El DNI del deudor es obligatorio.");
+            int dni;
+            try { dni = Integer.parseInt(dniTexto); } catch (NumberFormatException e) { throw new IllegalArgumentException("El DNI debe contener solamente números enteros."); }
+            if (dni <= 0) throw new IllegalArgumentException("Ingresa un DNI válido.");
             if (seleccionado == null) {
                 double deuda;
                 try { deuda = Double.parseDouble(txtDeuda.getText().trim().replace(',', '.')); }

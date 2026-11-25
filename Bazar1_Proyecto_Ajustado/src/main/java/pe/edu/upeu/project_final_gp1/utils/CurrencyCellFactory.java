@@ -5,7 +5,6 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import java.util.Locale;
 
-/** Formatea columnas numéricas monetarias en soles con dos decimales. */
 public final class CurrencyCellFactory {
     private CurrencyCellFactory() {}
     public static <S> Callback<TableColumn<S, Number>, TableCell<S, Number>> create() {

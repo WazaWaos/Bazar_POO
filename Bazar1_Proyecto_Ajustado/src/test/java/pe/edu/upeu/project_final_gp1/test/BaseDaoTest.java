@@ -15,6 +15,7 @@ abstract class BaseDaoTest {
         if (System.getProperty("bazar1.test.db") == null) {
             Path carpeta = Files.createTempDirectory("bazar1-test-");
             Path archivo = carpeta.resolve("bazar1-test.db");
+
             System.setProperty("app.db.path", archivo.toString());
             System.setProperty("bazar1.test.db", archivo.toString());
         }
@@ -22,7 +23,9 @@ abstract class BaseDaoTest {
 
     @BeforeEach
     void limpiarBase() throws Exception {
-        try (Connection cn = ConexionBD.getConnection(); Statement st = cn.createStatement()) {
+        try (Connection cn = ConexionBD.getConnection();
+             Statement st = cn.createStatement()) {
+
             st.executeUpdate("DELETE FROM detalle_venta");
             st.executeUpdate("DELETE FROM venta");
             st.executeUpdate("DELETE FROM cobro_deuda");
@@ -30,6 +33,7 @@ abstract class BaseDaoTest {
             st.executeUpdate("DELETE FROM deudor");
             st.executeUpdate("DELETE FROM producto");
             st.executeUpdate("DELETE FROM cliente");
+
             st.executeUpdate("DELETE FROM sqlite_sequence WHERE name IN ('venta','detalle_venta','deudor','egreso','cobro_deuda')");
         }
     }

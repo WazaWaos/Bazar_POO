@@ -16,28 +16,40 @@ public class TestVenta {
     static ProductoDaoImpl productos = new ProductoDaoImpl();
 
     public void insertar() throws SQLException {
-        Producto p = productos.searchById("TEST-P01");
-        if (p == null) {
-            productos.insert(new Producto("TEST-P01", "Producto de prueba", 10.00, 10));
-            p = productos.searchById("TEST-P01");
+        List<Producto> lista = productos.searchByNombre("Producto de prueba");
+        Producto p;
+
+        if (lista.isEmpty()) {
+            p = new Producto("Producto de prueba", 10.00, 10);
+            productos.insert(p);
+        } else {
+            p = lista.get(0);
         }
+
         if (p.getStock() < 1) {
             System.out.println("El producto de prueba no tiene stock");
             return;
         }
+
         Venta v = new Venta();
         v.setFecha(LocalDate.now().toString());
         v.setNombreCliente("Cliente de prueba");
-        v.setDniCliente("99999996");
-        v.setTelefonoCliente("900000003");
-        v.agregarDetalle(new DetalleVenta(p.getId(), p.getNombre(), 1, p.getPrecio()));
+        v.setDniCliente(99999996);
+
+        v.agregarDetalle(new DetalleVenta(
+                p.getId(), p.getNombre(), 1, p.getPrecio()
+        ));
+
         v.setMontoPagado(p.getPrecio());
+
         Venta result = dao.registrarVenta(v);
+
         System.out.println("Venta registrada: " + result.getIdVenta());
     }
 
     public void listar() throws SQLException {
         List<Venta> lista = dao.listAll();
+
         if (lista != null && !lista.isEmpty()) {
             for (Venta v : lista) {
                 System.out.println("ID VENTA: " + v.getIdVenta());

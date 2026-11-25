@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="900.0"
+            prefHeight="590.0"
+            stylesheets="@style.css"
+            fx:controller="pe.edu.upeu.project_final_gp1.controller.UsuarioController">
+
+    <children>
+        <HBox AnchorPane.topAnchor="0.0"
+              AnchorPane.bottomAnchor="0.0"
+              AnchorPane.leftAnchor="0.0"
+              AnchorPane.rightAnchor="0.0">
+
+            <children>
+
+                <VBox alignment="CENTER"
+                      spacing="18.0"
+                      prefWidth="390.0"
+                      styleClass="login-brand-panel"
+                      HBox.hgrow="ALWAYS">
+
+                    <padding>
+                        <Insets top="35.0" right="35.0"
+                                bottom="35.0" left="35.0"/>
+                    </padding>
+
+                    <children>
+
+                        <ImageView fitWidth="125.0"
+                                   fitHeight="125.0"
+                                   preserveRatio="true"
+                                   smooth="true">
+                            <image>
+                                <Image url="@Img/img.png"/>
+                            </image>
+                        </ImageView>
+
+                        <Label text="BAZAR DSA"
+                               styleClass="login-brand-title"/>
+
+                        <Label text="GESTIÓN COMERCIAL Y PUNTO DE VENTA"
+                               styleClass="login-brand-caption"
+                               wrapText="true"
+                               textAlignment="CENTER"/>
+
+                        <Region prefHeight="18.0"/>
+
+                        <Label text="Todo tu bazar,&#10;bajo control."
+                               styleClass="login-brand-message"
+                               wrapText="true"
+                               textAlignment="CENTER"/>
+
+                        <Label text="Inventario · Ventas · Clientes · Caja"
+                               styleClass="login-brand-footer"
+                               wrapText="true"
+                               textAlignment="CENTER"/>
+
+                    </children>
+                </VBox>
+
+                <VBox alignment="CENTER_LEFT"
+                      spacing="17.0"
+                      prefWidth="510.0"
+                      styleClass="login-form-panel"
+                      HBox.hgrow="ALWAYS">
+
+                    <padding>
+                        <Insets top="55.0" right="62.0"
+                                bottom="55.0" left="62.0"/>
+                    </padding>
+
+                    <children>
+
+                        <Label text="BIENVENIDO"
+                               styleClass="login-eyebrow"/>
+
+                        <Label text="Iniciar sesión"
+                               styleClass="login-title"/>
+
+                        <Label text="Ingresa tus credenciales para acceder al sistema."
+                               styleClass="login-subtitle"
+                               wrapText="true"/>
+
+                        <Region prefHeight="8.0"/>
+
+                        <VBox spacing="7.0">
+                            <children>
+
+                                <Label text="Usuario"
+                                       styleClass="login-field-label"/>
+
+                                <TextField fx:id="txtUser"
+                                           promptText="Escribe tu usuario"
+                                           styleClass="login-input"/>
+
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="7.0">
+                            <children>
+
+                                <Label text="Contraseña"
+                                       styleClass="login-field-label"/>
+
+                                <PasswordField fx:id="txtPassword"
+                                               promptText="Escribe tu contraseña"
+                                               styleClass="login-input"
+                                               onAction="#handleLogin"/>
+
+                            </children>
+                        </VBox>
+
+                        <Button text="INGRESAR AL SISTEMA"
+                                onAction="#handleLogin"
+                                maxWidth="Infinity"
+                                styleClass="button-login"
+                                prefHeight="45.0"/>
+
+                        <Label text="Acceso exclusivo para usuarios registrados."
+                               styleClass="login-note"
+                               wrapText="true"/>
+
+                    </children>
+                </VBox>
+
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
